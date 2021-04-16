@@ -15,5 +15,9 @@ public class ExampleUnitTest {
         assertEquals(4, 2 + 2);
     }
 
+    @Test
     public void mult_isCorrect() { assertEquals(10, 5 + 5);}
+
+    @Test
+    public void string_Test() {assertEquals("First", "First");}
 }
