@@ -25,7 +25,7 @@ public interface UserDAO {
     List<User> getUsers();
 
     @Query("SELECT * FROM " + UserDatabase.USER_TABLE + " WHERE appId =:id")
-    User getUserById(String id);
+    User getUserById(int id);
 
 
 
