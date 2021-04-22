@@ -8,4 +8,13 @@
     </string>
 
     <string name="app_name">CST438_Project3</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="save_quote">Save Quote</string>
+    <string name="welcome_young_patawan">Welcome Young Patawan</string>
+    <string name="submit">Submit</string>
+    <string name="other">Other</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="name">Name</string>
+    <string name="todo">TODO</string>
 </resources>

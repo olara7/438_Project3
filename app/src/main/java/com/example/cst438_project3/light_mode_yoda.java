@@ -1,12 +1,16 @@
 package com.example.cst438_project3;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.textview.MaterialTextView;
 
 public class light_mode_yoda extends AppCompatActivity {
 
@@ -24,6 +28,8 @@ public class light_mode_yoda extends AppCompatActivity {
     CheckBox otherTwoCheckBox;
 
     Button darkModeBtn;
+    Button submitBtn;
+    Button saveQuoteBtn;
 
     TextView quoteTextView;
 
@@ -43,6 +49,85 @@ public class light_mode_yoda extends AppCompatActivity {
         otherTwoCheckBox = findViewById(R.id.otherTwoCheckBox);
 
         darkModeBtn = findViewById(R.id.darkModeBtn);
-        quoteTextView = findViewById(R.id.quoteTextView);
+        submitBtn = findViewById(R.id.submitBtn);
+        saveQuoteBtn = findViewById(R.id.saveQuoteBtn);
+        saveQuoteBtn.setVisibility(View.INVISIBLE);
+
+        quoteTextView = (TextView)findViewById(R.id.quoteTextView);
+
+
+        submitBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(View view) {
+                String name1 = nameOneEditText.getText().toString();
+                String name2 = nameTwoEditText.getText().toString();
+
+                //check to see if there are multiple checked boxes
+                if( (maleOneCheckBox.isChecked() && femaleOneCheckBox.isChecked()) || (maleOneCheckBox.isChecked() && otherOneCheckBox.isChecked()) || femaleOneCheckBox.isChecked() && otherOneCheckBox.isChecked()){
+                    quoteTextView.setText("You have too many genders selected");
+                    saveQuoteBtn.setVisibility(View.INVISIBLE);
+                    return;
+                }
+
+                //check to see if there are multiple checked boxes
+                if( (maleTwoCheckBox.isChecked() && femaleTwoCheckBox.isChecked()) || (maleTwoCheckBox.isChecked() && otherTwoCheckBox.isChecked()) || femaleTwoCheckBox.isChecked() && otherTwoCheckBox.isChecked()){
+                    quoteTextView.setText("You have too many genders selected");
+                    saveQuoteBtn.setVisibility(View.INVISIBLE);
+                    return;
+                }
+
+                //check to see if there are no checked boxes
+                if(!maleOneCheckBox.isChecked() && !femaleOneCheckBox.isChecked() && !otherOneCheckBox.isChecked()){
+                    quoteTextView.setText("You have to select a gender");
+                    saveQuoteBtn.setVisibility(View.INVISIBLE);
+                    return;
+                }
+
+                //check to see if there are no checked boxes
+                if(!maleTwoCheckBox.isChecked() && !femaleTwoCheckBox.isChecked() && !otherTwoCheckBox.isChecked()){
+                    quoteTextView.setText("You have to select a gender");
+                    saveQuoteBtn.setVisibility(View.INVISIBLE);
+                    return;
+                }
+
+                if(maleOneCheckBox.isChecked()){
+                    quoteTextView.setText("MaleCheck1: " + name1 + " ");
+                    saveQuoteBtn.setVisibility(View.VISIBLE);
+                }else if(femaleOneCheckBox.isChecked()){
+                    quoteTextView.setText("FemaleCheck1: " + name1 + " ");
+                    saveQuoteBtn.setVisibility(View.VISIBLE);
+                }else if(otherOneCheckBox.isChecked()){
+                    quoteTextView.setText("OtherCheck1: " + name1 + " ");
+                    saveQuoteBtn.setVisibility(View.VISIBLE);
+                }else{
+                    quoteTextView.setText("You have to select a gender Patawan");
+                    saveQuoteBtn.setVisibility(View.INVISIBLE);
+                }
+
+                if(maleTwoCheckBox.isChecked()){
+                    quoteTextView.setText(quoteTextView.getText().toString() + "MaleCheck2: " + name2);
+                    saveQuoteBtn.setVisibility(View.VISIBLE);
+                }else if(femaleTwoCheckBox.isChecked()){
+                    quoteTextView.setText(quoteTextView.getText().toString() + "FemaleCheck2: " + name2);
+                    saveQuoteBtn.setVisibility(View.VISIBLE);
+                }else if(otherTwoCheckBox.isChecked()){
+                    quoteTextView.setText(quoteTextView.getText().toString() + "OtherCheck2: " + name2);
+                    saveQuoteBtn.setVisibility(View.VISIBLE);
+                }else{
+                    quoteTextView.setText("You have to select a gender Patawan");
+                    saveQuoteBtn.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        saveQuoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String quote = quoteTextView.getText().toString();
+
+                //save the quote into the database to be accessed later
+            }
+        });
     }
 }
