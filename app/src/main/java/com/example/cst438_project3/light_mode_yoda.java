@@ -1,6 +1,7 @@
 package com.example.cst438_project3;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +31,7 @@ public class light_mode_yoda extends AppCompatActivity {
     Button darkModeBtn;
     Button submitBtn;
     Button saveQuoteBtn;
+    Button savedQuotesBtn;
 
     TextView quoteTextView;
 
@@ -52,6 +54,7 @@ public class light_mode_yoda extends AppCompatActivity {
         submitBtn = findViewById(R.id.submitBtn);
         saveQuoteBtn = findViewById(R.id.saveQuoteBtn);
         saveQuoteBtn.setVisibility(View.INVISIBLE);
+        savedQuotesBtn = findViewById(R.id.savedQuotesBtn);
 
         quoteTextView = (TextView)findViewById(R.id.quoteTextView);
 
@@ -91,6 +94,8 @@ public class light_mode_yoda extends AppCompatActivity {
                     return;
                 }
 
+                String url = "https://love-calculator.p.rapidapi.com/getPercentage?fname=" + name1 + "&sname=" + name2;
+
                 if(maleOneCheckBox.isChecked()){
                     quoteTextView.setText("MaleCheck1: " + name1 + " ");
                     saveQuoteBtn.setVisibility(View.VISIBLE);
@@ -126,7 +131,16 @@ public class light_mode_yoda extends AppCompatActivity {
             public void onClick(View view) {
                 String quote = quoteTextView.getText().toString();
 
-                //save the quote into the database to be accessed later
+                //save the quote into the database to be accessed later LOOK UP DOCUMENTATION
+            }
+        });
+
+
+        savedQuotesBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(light_mode_yoda.this, SavedQuotesDisplay.class);
+                startActivity(intent);
             }
         });
     }
