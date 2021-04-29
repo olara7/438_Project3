@@ -1,3 +1,20 @@
 <resources>
+
+    <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+
+    <!-- Change the following strings as required -->
+    <string name="back4app_app_id">cDmtMzQxFa9e8qm9wJQFH0G6YZf0Pt6nMpmZt5OC</string>
+    <string name="back4app_client_key">y2k4rO0QRJFNY0VhR2Xc5516fX6GifISVImf2fkR
+    </string>
+
     <string name="app_name">CST438_Project3</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="save_quote">Save Quote</string>
+    <string name="welcome_young_patawan">Welcome Young Patawan</string>
+    <string name="submit">Submit</string>
+    <string name="other">Other</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="name">Name</string>
+    <string name="todo">TODO</string>
 </resources>
