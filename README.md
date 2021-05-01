@@ -20,7 +20,12 @@ Oscar Lara (https://github.com/olara7)
 
 # Mininum Viable Product
 
-Create and account, enter two names and the gender to find the compatability between two people.
+This app will display inputs where the user can type two names, a checkbox for genders and will display a message to the user based on the names inputted. 
+
+The user can toggle between light side yoda speak or the option that translates yoda’s advice into the ancient sith language.
+
+The user does not require a login in order to use the app but if they choose to create an account then they can save their results in the database. The app can save the quote as an image on their computer only if the user is logged in.
+
 
 # Timeline
 Week 1 - Starting code
@@ -40,9 +45,7 @@ https://www.android.com/
 
 API List:
 
-https://rapidapi.com/ajith/api/love-calculator/endpoints
-https://rapidapi.com/orthosie/api/yoda-translator/endpoints
-https://rapidapi.com/orthosie/api/sith-translator/endpoints
+We are using our own api created in Back4app in our app.
 
 
 
