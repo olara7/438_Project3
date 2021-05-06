@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-<<<<<<< HEAD
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,10 +20,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
-=======
+
 import com.google.android.material.textview.MaterialTextView;
 import com.parse.ParseUser;
->>>>>>> main
 
 public class light_mode_yoda extends AppCompatActivity {
 
