@@ -3,6 +3,7 @@ package com.example.cst438_project3;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,6 +23,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.google.android.material.textview.MaterialTextView;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class light_mode_yoda extends AppCompatActivity {
@@ -214,5 +219,23 @@ public class light_mode_yoda extends AppCompatActivity {
         int multi = 5;
         Random rand = new Random();
         return (multi*(Math.round(rand.nextInt((to+multi-from))+from)/multi));
+    }
+
+    public void getAPIInfo(Integer percentage) {
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Yoda");
+        query.whereEqualTo("Percentage", percentage);
+        query.getFirstInBackground(new GetCallback<ParseObject>() {
+            public void done(ParseObject result, ParseException e) {
+                if (e == null) {
+                    String quote = result.getString("Jedi");
+                    int percentage = result.getInt("Percentage");
+
+                    Log.d("Quote ", quote);
+                    Log.d("Percentage ", String.valueOf(percentage));
+                } else {
+                    // Something is wrong
+                }
+            }
+        });
     }
 }
