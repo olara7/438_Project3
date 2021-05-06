@@ -8,9 +8,11 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+<<<<<<< HEAD
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +21,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
+=======
+import com.google.android.material.textview.MaterialTextView;
+import com.parse.ParseUser;
+>>>>>>> main
 
 public class light_mode_yoda extends AppCompatActivity {
 
@@ -39,6 +45,7 @@ public class light_mode_yoda extends AppCompatActivity {
     Button submitBtn;
     Button saveQuoteBtn;
     Button savedQuotesBtn;
+    Button logoutBtn;
 
     TextView quoteTextView;
     TextView percentTextView;
@@ -68,6 +75,7 @@ public class light_mode_yoda extends AppCompatActivity {
         saveQuoteBtn = findViewById(R.id.saveQuoteBtn);
         saveQuoteBtn.setVisibility(View.INVISIBLE);
         savedQuotesBtn = findViewById(R.id.savedQuotesBtn);
+        logoutBtn = findViewById(R.id.logoutBtn);
 
         quoteTextView = (TextView)findViewById(R.id.quoteTextView);
         percentTextView = findViewById(R.id.percentageTextView);
@@ -156,6 +164,17 @@ public class light_mode_yoda extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(light_mode_yoda.this, SavedQuotesDisplay.class);
+                startActivity(intent);
+            }
+        });
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseUser.logOut();
+                ParseUser currentUser = ParseUser.getCurrentUser(); // changed to null
+                Intent intent = new Intent(light_mode_yoda.this, LoginActivity.class);
+                Toast.makeText(getApplicationContext(),"Logout Successful",Toast.LENGTH_LONG).show();
                 startActivity(intent);
             }
         });

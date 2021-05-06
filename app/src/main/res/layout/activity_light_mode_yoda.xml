@@ -190,6 +190,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.871" />
 
+<<<<<<< HEAD
     <TextView
         android:id="@+id/percentageTextView"
         android:layout_width="wrap_content"
@@ -205,5 +206,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.226" />
+=======
+    <Button
+        android:id="@+id/logoutBtn"
+        android:layout_width="73dp"
+        android:layout_height="33dp"
+        android:text="Logout"
+        android:textSize="8sp"
+        app:layout_constraintBottom_toTopOf="@+id/submitBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.075" />
+>>>>>>> main
 
 </androidx.constraintlayout.widget.ConstraintLayout>
