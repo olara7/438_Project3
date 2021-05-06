@@ -1,5 +1,4 @@
-{
-"results" : [
+[
 
   {
     "objectId": "272Lkppxrc",
@@ -170,4 +169,7 @@
     "updatedAt": "2021-04-29T20:14:24.054Z"
   }
 ]
+<<<<<<< HEAD:app/src/main/assets/Yoda.json
+=======
 }
+>>>>>>> main:Yoda.json

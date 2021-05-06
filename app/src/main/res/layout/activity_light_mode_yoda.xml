@@ -156,7 +156,7 @@
         android:id="@+id/submitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/submit"
+        android:text="Calculate"
         android:textColor="@color/black"
         app:backgroundTint="#8BC34A"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -190,6 +190,23 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.871" />
 
+<<<<<<< HEAD
+    <TextView
+        android:id="@+id/percentageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="100%"
+        android:textColor="#ff009e"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.226" />
+=======
     <Button
         android:id="@+id/logoutBtn"
         android:layout_width="73dp"
@@ -201,5 +218,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.075" />
+>>>>>>> main
 
 </androidx.constraintlayout.widget.ConstraintLayout>
