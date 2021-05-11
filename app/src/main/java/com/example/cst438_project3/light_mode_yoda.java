@@ -1,8 +1,14 @@
 package com.example.cst438_project3;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,14 +18,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import com.google.android.material.textview.MaterialTextView;
@@ -49,9 +60,11 @@ public class light_mode_yoda extends AppCompatActivity {
     Button saveQuoteBtn;
     Button savedQuotesBtn;
     Button logoutBtn;
+    Button screenBtn;
 
     TextView quoteTextView;
     TextView percentTextView;
+
 
     ArrayList<String> quoteList = new ArrayList<>();
     ArrayList<String> nameOneList = new ArrayList<>();
@@ -181,6 +194,19 @@ public class light_mode_yoda extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        verify(this);
+        screenBtn = findViewById(R.id.screenshotButton);
+
+        screenBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                getScreenShot(getWindow().getDecorView().getRootView(), "result");
+                Toast.makeText(getApplicationContext(),"Screenshot saved to Google Photos",Toast.LENGTH_LONG).show();
+            }
+        });
+
+
     }
 
     public void get_json(String percentage){
@@ -238,4 +264,62 @@ public class light_mode_yoda extends AppCompatActivity {
             }
         });
     }
+
+    protected static File getScreenShot(View view, String fileName){
+        Date dateTaken = new Date();
+        CharSequence formatOfDate = DateFormat.format("yyyy-MM-dd_hh:mm:ss", dateTaken);
+
+        try{
+            String dirPath = Environment.getExternalStorageDirectory().toString();
+            File fileDir =  new File(dirPath);
+            if(!fileDir.exists()){
+                boolean mkdir = fileDir.mkdir();
+
+            }
+
+            String pathToGallery = dirPath + "/" + fileName + "-" + formatOfDate + ".jpeg";
+
+            view.setDrawingCacheEnabled(true);
+            Bitmap screenshot =  Bitmap.createBitmap(view.getDrawingCache());
+            view.setDrawingCacheEnabled(false);
+
+            File yodaQuote = new File(pathToGallery);
+
+            FileOutputStream toStorage = new FileOutputStream(yodaQuote);
+            int imQuality = 100;
+
+            screenshot.compress(Bitmap.CompressFormat.JPEG, imQuality, toStorage);
+            toStorage.flush();
+            toStorage.close();
+            return yodaQuote;
+
+
+
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSION_STORAGE = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+
+    public static void verify(Activity activity){
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,
+                    PERMISSION_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE);
+        }
+    }
+
+
 }
