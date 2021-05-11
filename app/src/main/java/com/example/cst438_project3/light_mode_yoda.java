@@ -2,12 +2,14 @@ package com.example.cst438_project3;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +24,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.google.android.material.textview.MaterialTextView;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -30,6 +31,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 public class light_mode_yoda extends AppCompatActivity {
+
+    int light_or_dark = 0;
 
     EditText nameOneEditText;
     EditText nameTwoEditText;
@@ -53,10 +56,18 @@ public class light_mode_yoda extends AppCompatActivity {
     TextView quoteTextView;
     TextView percentTextView;
 
+    View relativeLayout;
+    ImageView yoda;
+
     ArrayList<String> quoteList = new ArrayList<>();
     ArrayList<String> nameOneList = new ArrayList<>();
     ArrayList<String> nameTwoList = new ArrayList<>();
-    ArrayList<String> percentList = new ArrayList<>();
+    ArrayList<Integer> percentList = new ArrayList<>();
+
+    ArrayList<String> quoteListSith = new ArrayList<>();
+    ArrayList<String> nameOneListSith = new ArrayList<>();
+    ArrayList<String> nameTwoListSith = new ArrayList<>();
+    ArrayList<Integer> percentListSith = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +94,9 @@ public class light_mode_yoda extends AppCompatActivity {
         quoteTextView = (TextView)findViewById(R.id.quoteTextView);
         percentTextView = findViewById(R.id.percentageTextView);
         percentTextView.setVisibility(View.INVISIBLE);
+
+        relativeLayout = findViewById(R.id.relativeLayout);
+        yoda = findViewById(R.id.imageView5);
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
@@ -127,26 +141,55 @@ public class light_mode_yoda extends AppCompatActivity {
                 //check to see if user has already inputted the same names
                 for(int i = 0; i < nameOneList.size(); i++){
                     if(nameOneList.get(i).equals(nameOneEditText.getText().toString()) && nameTwoList.get(i).equals(nameTwoEditText.getText().toString())){
-                        String percent = percentList.get(i);
-                        get_json(percent);
-                        quoteTextView.setText(quoteList.get(quoteList.size() - 1));
-                        percentTextView.setText(percent + "%");
+
+                        if(light_or_dark == 0){
+                            Integer percent = percentList.get(i);
+                            String p = Integer.toString(percent);
+                            get_json(p);
+                            //getAPIInfo(percent);
+                            quoteTextView.setText(quoteList.get(quoteList.size() - 1));
+                            percentTextView.setText(percent + "%");
+                            saveQuoteBtn.setVisibility(View.VISIBLE);
+                        }else{
+                            Integer percent = percentListSith.get(i);
+                            String p = Integer.toString(percent);
+                            get_json(p);
+                            //getAPIInfo(percent);
+                            quoteTextView.setText(quoteListSith.get(quoteListSith.size() - 1));
+                            percentTextView.setText(percent + "%");
+                            saveQuoteBtn.setVisibility(View.VISIBLE);
+                        }
+
                         check = false;
                         break;
                     }
                 }
 
                 if(check){
-                    int percent = get_percentage();
-                    String p = String.valueOf(percent);
+                    Integer percent = get_percentage();
+                    //getAPIInfo(percent);
+
+                    String p = Integer.toString(percent);
                     get_json(p);
 
                     nameOneList.add(nameOneEditText.getText().toString());
                     nameTwoList.add(nameTwoEditText.getText().toString());
-                    percentList.add(p);
+                    percentList.add(percent);
 
-                    quoteTextView.setText(quoteList.get(quoteList.size() - 1));
-                    percentTextView.setText(percentList.get(percentList.size() - 1) + "%");
+                    nameOneListSith.add(nameOneEditText.getText().toString());
+                    nameTwoListSith.add(nameTwoEditText.getText().toString());
+                    percentListSith.add(percent);
+
+                    if(light_or_dark == 0){
+                        quoteTextView.setText(quoteList.get(quoteList.size() - 1));
+                        percentTextView.setText(percentList.get(percentList.size() - 1) + "%");
+                        saveQuoteBtn.setVisibility(View.VISIBLE);
+                    }else{
+                        quoteTextView.setText(quoteListSith.get(quoteListSith.size() - 1));
+                        percentTextView.setText(percentListSith.get(percentListSith.size() - 1) + "%");
+                        saveQuoteBtn.setVisibility(View.VISIBLE);
+                    }
+
                 }
 
                 percentTextView.setVisibility(View.VISIBLE);
@@ -181,6 +224,33 @@ public class light_mode_yoda extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        darkModeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(light_or_dark == 0){
+                    relativeLayout.setBackgroundColor(Color.parseColor("#656565")); //sets background to gray
+                    yoda.setImageResource(R.drawable.dark_yoda);
+
+                    light_or_dark = 1;
+
+                    if(quoteListSith.size() != 0){
+                        quoteTextView.setText(quoteListSith.get(quoteListSith.size() - 1));
+                    }
+                }else{
+                    relativeLayout.setBackgroundColor(Color.parseColor("#ffffff")); //sets background to white
+                    yoda.setImageResource(R.drawable.light_yoda);
+
+                    light_or_dark = 0;
+
+                    if(quoteList.size() != 0){
+                        quoteTextView.setText(quoteList.get(quoteList.size() - 1));
+                    }
+                }
+
+            }
+        });
     }
 
     public void get_json(String percentage){
@@ -202,7 +272,8 @@ public class light_mode_yoda extends AppCompatActivity {
                 JSONObject obj = jsonArray.getJSONObject(i);
 
                 if(obj.getString("Percentage").equals(percentage)){
-                    quoteList.add(obj.getString("Jedi"));
+                        quoteList.add(obj.getString("Jedi"));
+                        quoteListSith.add(obj.getString("Sith"));
                 }
             }
 
@@ -227,15 +298,17 @@ public class light_mode_yoda extends AppCompatActivity {
         query.getFirstInBackground(new GetCallback<ParseObject>() {
             public void done(ParseObject result, ParseException e) {
                 if (e == null) {
-                    String quote = result.getString("Jedi");
-                    int percentage = result.getInt("Percentage");
+                    String quoteJedi = result.getString("Jedi");
+                    String quoteSith = result.getString("Sith");
 
-                    Log.d("Quote ", quote);
-                    Log.d("Percentage ", String.valueOf(percentage));
+                    quoteList.add(quoteJedi);
+                    quoteListSith.add(quoteSith);
                 } else {
                     // Something is wrong
                 }
             }
         });
     }
+
+
 }
