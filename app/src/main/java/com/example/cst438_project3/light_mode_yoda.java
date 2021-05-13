@@ -14,6 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Database;
+import androidx.room.Room;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,8 +24,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
+import com.example.cst438_project3.userDB.UserDAO;
+import com.example.cst438_project3.userDB.UserDatabase;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -33,6 +38,8 @@ import com.parse.ParseUser;
 public class light_mode_yoda extends AppCompatActivity {
 
     int light_or_dark = 0;
+    UserDAO mUserDAO;
+    List<User> allAccounts;
 
     EditText nameOneEditText;
     EditText nameTwoEditText;
@@ -74,6 +81,9 @@ public class light_mode_yoda extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_mode_yoda);
 
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("username");
+
         nameOneEditText = findViewById(R.id.nameOneEditText);
         maleOneCheckBox = findViewById(R.id.maleOneCheckBox);
         femaleOneCheckBox = findViewById(R.id.femaleOneCheckBox);
@@ -91,12 +101,14 @@ public class light_mode_yoda extends AppCompatActivity {
         savedQuotesBtn = findViewById(R.id.savedQuotesBtn);
         logoutBtn = findViewById(R.id.logoutBtn);
 
-        quoteTextView = (TextView)findViewById(R.id.quoteTextView);
+        quoteTextView = findViewById(R.id.quoteTextView);
         percentTextView = findViewById(R.id.percentageTextView);
         percentTextView.setVisibility(View.INVISIBLE);
 
         relativeLayout = findViewById(R.id.relativeLayout);
         yoda = findViewById(R.id.imageView5);
+
+        getDatabase();
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
@@ -201,15 +213,32 @@ public class light_mode_yoda extends AppCompatActivity {
             public void onClick(View view) {
                 String quote = quoteTextView.getText().toString();
 
-                //save the quote into the database to be accessed later LOOK UP DOCUMENTATION
+                allAccounts = mUserDAO.getUsers();
+
+                System.out.println(username);
+
+                for(int i = 0; i < allAccounts.size(); i++){
+
+                    if(allAccounts.get(i).getAppUsername().equals(username)){
+
+                        ArrayList<String> allQuotes = allAccounts.get(i).getQuotes();
+                        allQuotes.add(quote);
+                        allAccounts.get(i).setQuotes(allQuotes);
+
+                        System.out.println(allAccounts.get(i).getQuotes());
+
+                        Toast.makeText(getApplicationContext(),"Saved Quote",Toast.LENGTH_LONG).show();
+                        break;
+                    }
+                }
             }
         });
-
 
         savedQuotesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(light_mode_yoda.this, SavedQuotesDisplay.class);
+                intent.putExtra("userName", username);
                 startActivity(intent);
             }
         });
@@ -310,5 +339,10 @@ public class light_mode_yoda extends AppCompatActivity {
         });
     }
 
-
+    private void getDatabase() {
+        mUserDAO= Room.databaseBuilder(this, UserDatabase.class,"USER_TABLE")
+                .allowMainThreadQueries()
+                .build()
+                .getUserDAO();
+    }
 }

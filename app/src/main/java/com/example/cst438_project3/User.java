@@ -8,7 +8,9 @@ import androidx.room.PrimaryKey;
 
 import com.example.cst438_project3.userDB.UserDatabase;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Entity(tableName = UserDatabase.USER_TABLE)
@@ -20,10 +22,13 @@ public class User {
     private String appUsername;
     private String appPassword;
     private Date getDate;
+    private ArrayList<String> quotes;
 
     public User(String appUsername, String appPassword) {
         this.appUsername = appUsername;
         this.appPassword = appPassword;
+
+        quotes = new ArrayList<>();
 
         getDate = new Date();
     }
@@ -58,6 +63,18 @@ public class User {
 
     public void setGetDate(Date getDate) {
         this.getDate = getDate;
+    }
+
+    public ArrayList<String> getQuotes() {
+        return quotes;
+    }
+
+    public void setQuotes(ArrayList<String> quotes) {
+        this.quotes = quotes;
+    }
+
+    public void setQuoteValue(String quote) {
+        quotes.add(quote);
     }
 
     @Override
