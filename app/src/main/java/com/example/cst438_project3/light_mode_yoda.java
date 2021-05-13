@@ -1,22 +1,9 @@
-/**@Contributors: Timothy Johnson, Jim O. Cabrera
- * Description:
- * Date_of_Submission: May 14, 2021
- * Comments:
- * */
-
-
 package com.example.cst438_project3;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,21 +14,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import androidx.room.Database;
+import androidx.room.Room;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
+import com.example.cst438_project3.userDB.UserDAO;
+import com.example.cst438_project3.userDB.UserDatabase;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -51,6 +38,8 @@ import com.parse.ParseUser;
 public class light_mode_yoda extends AppCompatActivity {
 
     int light_or_dark = 0;
+    UserDAO mUserDAO;
+    List<User> allAccounts;
 
     EditText nameOneEditText;
     EditText nameTwoEditText;
@@ -70,7 +59,6 @@ public class light_mode_yoda extends AppCompatActivity {
     Button saveQuoteBtn;
     Button savedQuotesBtn;
     Button logoutBtn;
-    Button screenBtn;
 
     TextView quoteTextView;
     TextView percentTextView;
@@ -93,6 +81,9 @@ public class light_mode_yoda extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_light_mode_yoda);
 
+        Intent intent = getIntent();
+        String username = intent.getStringExtra("username");
+
         nameOneEditText = findViewById(R.id.nameOneEditText);
         maleOneCheckBox = findViewById(R.id.maleOneCheckBox);
         femaleOneCheckBox = findViewById(R.id.femaleOneCheckBox);
@@ -110,12 +101,14 @@ public class light_mode_yoda extends AppCompatActivity {
         savedQuotesBtn = findViewById(R.id.savedQuotesBtn);
         logoutBtn = findViewById(R.id.logoutBtn);
 
-        quoteTextView = (TextView)findViewById(R.id.quoteTextView);
+        quoteTextView = findViewById(R.id.quoteTextView);
         percentTextView = findViewById(R.id.percentageTextView);
         percentTextView.setVisibility(View.INVISIBLE);
 
         relativeLayout = findViewById(R.id.relativeLayout);
         yoda = findViewById(R.id.imageView5);
+
+        getDatabase();
 
         submitBtn.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("SetTextI18n")
@@ -220,15 +213,32 @@ public class light_mode_yoda extends AppCompatActivity {
             public void onClick(View view) {
                 String quote = quoteTextView.getText().toString();
 
-                //save the quote into the database to be accessed later LOOK UP DOCUMENTATION
+                allAccounts = mUserDAO.getUsers();
+
+                System.out.println(username);
+
+                for(int i = 0; i < allAccounts.size(); i++){
+
+                    if(allAccounts.get(i).getAppUsername().equals(username)){
+
+                        ArrayList<String> allQuotes = allAccounts.get(i).getQuotes();
+                        allQuotes.add(quote);
+                        allAccounts.get(i).setQuotes(allQuotes);
+
+                        System.out.println(allAccounts.get(i).getQuotes());
+
+                        Toast.makeText(getApplicationContext(),"Saved Quote",Toast.LENGTH_LONG).show();
+                        break;
+                    }
+                }
             }
         });
-
 
         savedQuotesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(light_mode_yoda.this, SavedQuotesDisplay.class);
+                intent.putExtra("userName", username);
                 startActivity(intent);
             }
         });
@@ -270,33 +280,6 @@ public class light_mode_yoda extends AppCompatActivity {
 
             }
         });
-
-        /**@Contributor: Jim Cabrera
-         *  1. The verify() function and uses activity_light_mode_yoda as a parameter.
-         *
-         *  2. screenBtn is linked to screenshotButton on the activity_light_mode_yoda.xml
-         *  then, once the image is clicked, getScreenshot is called and takes the screenshot
-         *  by using the parameters by getting the background drawable  then finds the
-         *  topmost view, and a string for the file name.
-         *
-         *  3. Toast message informs user image has been saved.
-         *
-         * * */
-        verify(this);
-        screenBtn = findViewById(R.id.screenshotButton);
-
-        screenBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                getScreenShot(getWindow().getDecorView().getRootView(), "result");
-                Toast.makeText(getApplicationContext(),"Screenshot saved to Google Photos",Toast.LENGTH_LONG).show();
-            }
-        });
-
-
-
-
-
     }
 
     public void get_json(String percentage){
@@ -356,68 +339,10 @@ public class light_mode_yoda extends AppCompatActivity {
         });
     }
 
-    /**
-     *
-     * */
-    protected static File getScreenShot(View view, String fileName){
-        Date dateTaken = new Date();
-        CharSequence formatOfDate = DateFormat.format("yyyy-MM-dd_hh:mm:ss", dateTaken);
-
-        try{
-            String dirPath = Environment.getExternalStorageDirectory().toString();
-            File fileDir =  new File(dirPath);
-            if(!fileDir.exists()){
-                boolean mkdir = fileDir.mkdir();
-
-            }
-
-            String pathToGallery = dirPath + "/" + fileName + "-" + formatOfDate + ".jpeg";
-
-            view.setDrawingCacheEnabled(true);
-            Bitmap screenshot = Bitmap.createBitmap(view.getDrawingCache());
-            view.setDrawingCacheEnabled(false);
-
-            File yodaQuote = new File(pathToGallery);
-
-            FileOutputStream toStorage = new FileOutputStream(yodaQuote);
-            int imQuality = 100;
-
-            screenshot.compress(Bitmap.CompressFormat.JPEG, imQuality, toStorage);
-            toStorage.flush();
-            toStorage.close();
-            return yodaQuote;
-
-
-
-        }catch(FileNotFoundException e){
-            e.printStackTrace();
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        return null;
+    private void getDatabase() {
+        mUserDAO= Room.databaseBuilder(this, UserDatabase.class,"USER_TABLE")
+                .allowMainThreadQueries()
+                .build()
+                .getUserDAO();
     }
-
-
-    /**
-     * */
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSION_STORAGE = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-    };
-
-    public static void verify(Activity activity){
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity,
-                    PERMISSION_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE);
-        }
-    }
-
-
-
-
 }

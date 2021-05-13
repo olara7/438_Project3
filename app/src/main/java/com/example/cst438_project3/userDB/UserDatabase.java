@@ -14,4 +14,5 @@ public abstract class UserDatabase extends RoomDatabase {
     public static final String USER_TABLE = "USER_TABLE";
 
     public abstract UserDAO getUserDAO();
+
 }
