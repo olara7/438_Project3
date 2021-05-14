@@ -18,4 +18,6 @@
     <string name="name">Name</string>
     <string name="todo">TODO</string>
     <string name="saved_quotes">Saved Quotes</string>
+    <string name="screenshot">Screenshot</string>
+    <string name="take_screenshot">Take Screenshot</string>
 </resources>

@@ -1,9 +1,25 @@
+/**@Contributors: Timothy Johnson, Jim O. Cabrera
+ * Description:The front end of our Yoda Matchmaker app where that the user interacts with.
+ *
+ * Date_of_Submission: May 14, 2021
+ * Comments: It was a bit difficult to get the ap to take screenshots. We had to search for ways to
+ *
+ * Sources: Save screenshot tutorial:
+ * https://www.youtube.com/watch?v=EgjtFX3SjXo&t=2s
+ * */
+
 package com.example.cst438_project3;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +30,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.room.Database;
 import androidx.room.Room;
 
@@ -21,9 +38,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -59,6 +80,7 @@ public class light_mode_yoda extends AppCompatActivity {
     Button saveQuoteBtn;
     Button savedQuotesBtn;
     Button logoutBtn;
+    Button screenBtn;
 
     TextView quoteTextView;
     TextView percentTextView;
@@ -280,6 +302,20 @@ public class light_mode_yoda extends AppCompatActivity {
 
             }
         });
+
+        verify(this);
+        screenBtn = findViewById(R.id.screenshotButton);
+
+        screenBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                getScreenShot(getWindow().getDecorView().getRootView(), "result");
+                Toast.makeText(getApplicationContext(),"Screenshot saved to Google Photos",Toast.LENGTH_LONG).show();
+            }
+        });
+
+
+
     }
 
     public void get_json(String percentage){
@@ -345,4 +381,77 @@ public class light_mode_yoda extends AppCompatActivity {
                 .build()
                 .getUserDAO();
     }
+
+    /**The function getScreenShot creates the image file for the screenshot and the path
+     * the image will be stored in.
+     *
+     *
+     * */
+    protected static File getScreenShot(View view, String fileName){
+        Date dateTaken = new Date();
+        CharSequence formatOfDate = DateFormat.format("yyyy-MM-dd_hh:mm:ss", dateTaken);
+
+
+        try{
+            String dirPath = Environment.getExternalStorageDirectory().toString();
+            File fileDir =  new File(dirPath);
+            if(!fileDir.exists()){
+                boolean mkdir = fileDir.mkdir();
+
+            }//If the directory already exists, it will make the directory.
+
+
+            String pathToGallery = dirPath + "/" + fileName + "-" + formatOfDate + ".jpeg";
+
+            view.setDrawingCacheEnabled(true);
+            Bitmap screenshot = Bitmap.createBitmap(view.getDrawingCache());
+            view.setDrawingCacheEnabled(false);
+
+            File yodaQuote = new File(pathToGallery);
+
+            //Outputs image to storage.
+            FileOutputStream toStorage = new FileOutputStream(yodaQuote);
+            int imQuality = 100;
+
+            screenshot.compress(Bitmap.CompressFormat.JPEG, imQuality, toStorage);
+            toStorage.flush();
+            toStorage.close();
+            return yodaQuote;
+
+
+        //Catches if the image is not found, or there's an input output exception.
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /** The following blocks of code handle user permission to use their
+     * phone's storage.
+     *
+     * In other words, this code has the app ask if the user through a modal if they want to
+     * save the images in phone and store the screenshot image in phone if they click yes or
+     * won't if they press no.
+     * */
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSION_STORAGE = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
+
+    public static void verify(Activity activity){
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity,
+                    PERMISSION_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE);
+        }
+    }
+
+
 }
