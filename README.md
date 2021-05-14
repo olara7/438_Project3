@@ -35,7 +35,8 @@ Week 4 - Admin, light yoda and sith mode
 
 # Mockup and ERD
 
-<img width="877" alt="Screen Shot 2021-04-15 at 11 34 26 AM" src="https://user-images.githubusercontent.com/54912970/114920701-8e432e00-9dde-11eb-9aa4-e9e9a0e118ab.png">
+![Yoda Diagram (1)](https://user-images.githubusercontent.com/77947717/118316891-3d415b00-b4ac-11eb-80a9-a72a52045871.png)
+
 <img width="877" alt="Screen Shot 2021-04-15 at 11 34 21 AM" src="https://user-images.githubusercontent.com/54912970/114920712-90a58800-9dde-11eb-8a88-f820a6d95ea5.png">
 <img width="877" alt="Screen Shot 2021-04-15 at 11 34 15 AM" src="https://user-images.githubusercontent.com/54912970/114920714-913e1e80-9dde-11eb-99c4-b21b530a75c0.png">
 
